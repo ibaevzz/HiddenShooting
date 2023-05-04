@@ -97,6 +97,7 @@ class RecordService : Service() {
                     setOrientationHint(270)
                 }
                 setVideoEncodingBitRate(10*1024*1024)
+                setAudioEncodingBitRate(320*1000)
                 setVideoSize(1920, 1080)
                 setOutputFile(file.absolutePath)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
