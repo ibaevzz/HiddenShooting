@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         if(RecordService.isRunning) {
             binding.start.text = "Stop shooting"
         }
@@ -28,10 +29,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     startService(0)
                 }
-                binding.start.text = "Stop shooting"
             }else{
                 stopService()
-                binding.start.text = "Start shooting"
             }
         }
     }
@@ -44,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(grantResults[0]==PackageManager.PERMISSION_GRANTED && grantResults[1]==PackageManager.PERMISSION_GRANTED){
             startService()
+            binding.start.text = "Stop shooting"
         }
     }
 
@@ -60,11 +60,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RecordService::class.java)
             intent.putExtra("camera", id)
             startForegroundService(intent)
+            binding.start.text = "Stop shooting"
         }
     }
 
     private fun stopService(){
         val intent = Intent(this, RecordService::class.java)
         stopService(intent)
+        binding.start.text = "Start shooting"
     }
 }

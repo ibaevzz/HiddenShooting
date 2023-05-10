@@ -66,16 +66,16 @@ class RecordService : Service() {
         super.onCreate()
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         recorder = MediaRecorder(this)
-        isRunning = true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        recorder.stop()
-        recorder.release()
-        isRunning = false
-        MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath), null){_, _ ->
-
+        if(isRunning){
+            recorder.stop()
+            recorder.release()
+            isRunning = false
+            MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath), null) { _, _ ->
+            }
         }
     }
 
@@ -85,25 +85,37 @@ class RecordService : Service() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
         ) {
-            val i = intent?.getIntExtra("camera", 0)
-            cameraManager.openCamera(cameraManager.cameraIdList[i?:0], mainExecutor, callback)
-            recorder.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setVideoSource(MediaRecorder.VideoSource.SURFACE)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                if(i==0){
-                    setOrientationHint(90)
-                }else if(i==1){
-                    setOrientationHint(270)
+            var i = intent?.getIntExtra("camera", 0)
+            if(isRunning){
+                stopSelf()
+            }else {
+                i = if(i==2){
+                    0
+                }else{
+                    1
                 }
-                setVideoEncodingBitRate(10*1024*1024)
-                setAudioEncodingBitRate(320*1000)
-                setVideoSize(1920, 1080)
-                setOutputFile(file.absolutePath)
-                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                prepare()
+                cameraManager.openCamera(cameraManager.cameraIdList[i ?: 0], mainExecutor, callback)
+                recorder.apply {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
+                    setVideoSource(MediaRecorder.VideoSource.SURFACE)
+                    setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                    if (i == 0) {
+                        setOrientationHint(90)
+                    } else if (i == 1) {
+                        setOrientationHint(270)
+                    }
+                    setVideoEncodingBitRate(10 * 1024 * 1024)
+                    setAudioEncodingBitRate(320 * 1000)
+                    setVideoSize(1920, 1080)
+                    setOutputFile(file.absolutePath)
+                    setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    prepare()
+                }
+                isRunning = true
             }
+        }else{
+            stopSelf()
         }
         return START_NOT_STICKY
     }

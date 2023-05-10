@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hidden Shooting</string>
+    <string name="app_widget_description">This is an app widget description</string>
 </resources>
