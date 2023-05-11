@@ -7,4 +7,4 @@
 ## Уведомление при съемке
 ![Image alt](https://github.com/ibaevzz/HiddenShooting/blob/master/assets/image2.jpg)
 ## Виджет для домашнего экрана
-![Image alt](https://github.com/ibaevzz/HiddenShooting/blob/master/assets/image3.jpg)
+![Image alt](https://github.com/ibaevzz/HiddenShooting/blob/master/assets/image3.png)
