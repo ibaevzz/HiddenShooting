@@ -5,6 +5,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Camera
 import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraDevice.StateCallback
@@ -76,6 +77,7 @@ class RecordService : Service() {
             isRunning = false
             MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath), null) { _, _ ->
             }
+            camera.close()
         }
     }
 
